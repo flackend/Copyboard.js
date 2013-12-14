@@ -11,15 +11,20 @@
     <![endif]-->
 </head>
 <body>
+    <a href="https://github.com/flackend/Copyboard.js"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_left_darkblue_121621.png" alt="Fork me on GitHub"></a>
     <div class="container">
-        <div class="hero-unit">
-            <h1>Copyboard.js Demo</h1>
+        <div class="page-header">
+            <h1><a href="https://github.com/flackend/Copyboard.js">Copyboard.js</a> Demo</h1>
         </div>
-            <p><button class="btn" id="demo-button">Hover Here and press <strong>Ctrl + C</strong></button></p>
-            <p class="lead">If any of the following element types are in focus, copy is will not execute:</p>
-            <p><textarea placeholder="textarea"></textarea></p>
-            <p><input type="text" placeholder="input"></p>
-            <p class="lead" contenteditable>Element with content editable.</p>
+        <p class="lead">Use Copyboard.js to programmatically set a value that will be placed into the clipboard when the user hits <strong>Ctrl + C</strong> (or <strong>Command + C</strong>). <a href="https://github.com/flackend/Copyboard.js">View library on GitHub</a>.</p>
+        <p><button class="btn" id="demo-button">Hover here and press <strong>Ctrl + C</strong></button></p>
+        <hr>
+        <p><strong>Note:</strong> Copyboard.js checks that the user hasn't selected any text and that none of the following element types are in focus before it hijacks the copy function.</p>
+        <p><textarea placeholder="textareas" rows="4"></textarea></p>
+        <p><input type="text" placeholder="any input type"></p>
+        <div class="well" contenteditable>
+            <p>elements with content editable.</p>
+        </div>
     </div>
 <script src="copyboard.js"></script>
 <script>
