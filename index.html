@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <link rel="stylesheet" href="bootstrap.min.css">
+    <style>body { padding-top: 10px }</style>
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+        <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+</head>
+<body>
+    <div class="container">
+        <div class="hero-unit">
+            <h1>Copyboard.js Demo</h1>
+        </div>
+            <p><button class="btn" id="demo-button">Hover Here and press <strong>Ctrl + C</strong></button></p>
+            <p class="lead">If any of the following element types are in focus, copy is will not execute:</p>
+            <p><textarea placeholder="textarea"></textarea></p>
+            <p><input type="text" placeholder="input"></p>
+            <p class="lead" contenteditable>Element with content editable.</p>
+    </div>
+<script src="copyboard.js"></script>
+<script>
+    // Turn on debug mode
+    Copyboard.debug = true;
+
+    var demoButton = document.getElementById('demo-button');
+
+    demoButton.onmouseover = function() {
+
+        Copyboard.set("Hello, World!");
+        this.className += (' btn-success');
+    }
+
+    demoButton.onmouseout = function() {
+
+        this.className = ('btn');
+    }
+</script>
+</body>
+</html>
