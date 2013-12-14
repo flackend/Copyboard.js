@@ -8,7 +8,7 @@
  * @author Jared Flack
  */
 
-var CopyBoard = new ((function() {
+var Copyboard = new ((function() {
 
     return function() {
 
@@ -19,9 +19,8 @@ var CopyBoard = new ((function() {
          */
 
         var _this = this,
-            $document = $(document),
-            $clipboard,
-            $clipboardContainer;
+            copyboard,
+            copyboardContainer;
 
         /**
          * Public Variables
@@ -29,6 +28,7 @@ var CopyBoard = new ((function() {
 
         _this.value = null;
         _this.debug = false;
+        _this.prepared = false;
 
         /**
          * Public Functions
@@ -40,7 +40,7 @@ var CopyBoard = new ((function() {
           */
         _this.set = function(value) {
 
-            debug('Clipboard value set: ' + value);
+            debug('Copyboard value set: ' + value);
 
             if (typeof value == 'string') {
 
@@ -56,17 +56,16 @@ var CopyBoard = new ((function() {
          * Private Functions
          */
 
-        var debug;
+        /**
+         * Sends debug information to the JS console if debug mode is on
+         * @param  string msg Debug message
+         */
+        function debug(msg) {
 
-        // This ensures that if we're not in debug mode, debug messages are
-        // silenced.
-        if (_this.debug) {
+            if(_this.debug) {
 
-            debug = function(msg) { console.debug(msg) }
-
-        } else {
-
-            debug = function() {}
+                console.debug('Copyboard: ' + msg);
+            }
         }
 
         function prepareCopy(event) {
@@ -78,17 +77,33 @@ var CopyBoard = new ((function() {
                 return;
             }
 
+            // We can stop here if we've allready prepared the copyboard. This
+            // will be be true when the user has pressed Ctrl and then presses
+            // another key.
+            if(_this.prepared) {
+
+                return;
+            }
+
+            // Ensure the suer isn't trying to utilize a text input
+            if(event.target.tagName == "TEXTAREA" || event.target.tagName == "INPUT" || event.target.contentEditable == "true") {
+
+                debug('User is using a text input.');
+                console.log(event);
+                return;
+            }
+
             // Ensure we have something to copy
             if (_this.value === null) {
 
-                debug('No value prepared to copy. Use Clipboard.set().');
+                debug('No value prepared to copy. Use Copyboard.set().');
                 return;
             }
 
             // Make sure the user hasn't selected some text
             if (typeof window.getSelection == 'function') {
 
-                $clipboard.val('');
+                copyboard.value = '';
 
                 var selection = window.getSelection().toString();
 
@@ -99,38 +114,49 @@ var CopyBoard = new ((function() {
                 }
             }
 
-            debug('Preparing clipboard');
+            debug('Preparing copyboard');
 
-            $clipboard.val(_this.value).focus().select();
+            document.onkeyup = function() {
+
+                debug('Copyboard finish.');
+
+                // Reset ready state
+                _this.prepared = false;
+                document.removeEventListener('onkeyup');
+                copyboardContainer.style.display = 'none';
+            };
+
+            // Show conatiner
+            copyboardContainer.style.display = 'block';
+            // Set value we're going to select
+            copyboard.value = _this.value;
+            // Focus the textarea
+            copyboard.focus();
+            // Select it's text
+            copyboard.select();
+            //
+            _this.prepared = true;
+            // Now, if the user presses "c", they'll be copying the text
         }
 
         /**
          * Event Listeners
          */
 
-        $document.on('keydown', prepareCopy);
+        document.onkeydown = prepareCopy;
 
         /**
          * Initialize!
          */
         (function init() {
 
-            debug('Inintializing Clipboard');
+            debug('Inintializing Copyboard.');
 
-            $clipboard = $('<textarea>');
-            $clipboardContainer = $('<div>');
-            $clipboardContainer
-                .css({
-                    'position': 'fixed',
-                    'top': 0,
-                    'left': 0,
-                    'width': 0,
-                    'height': 0,
-                    'opacity': 0,
-                })
-                .append($clipboard);
-
-            $('body').append($clipboardContainer);
+            copyboard = document.createElement('textarea');
+            copyboardContainer = document.createElement('div');
+            copyboardContainer.style.cssText = 'top: 0; left: 0; width: 0; height: 0; opacity: 0; display: none; position: fixed';
+            copyboardContainer.appendChild(copyboard);
+            document.getElementsByTagName('body')[0].appendChild(copyboardContainer);
         })();
     };
 })());
