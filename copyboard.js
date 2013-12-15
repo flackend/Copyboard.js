@@ -89,7 +89,6 @@ var Copyboard = new ((function() {
             if(event.target.tagName == "TEXTAREA" || event.target.tagName == "INPUT" || event.target.contentEditable == "true") {
 
                 debug('User is using a text input.');
-                console.log(event);
                 return;
             }
 
